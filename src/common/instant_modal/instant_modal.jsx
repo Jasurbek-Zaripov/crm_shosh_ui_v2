@@ -12,7 +12,7 @@ export default function InstantBookingModal({ open, setOpen }) {
   return (
     <>
       <Modal
-        title={t("chess.23")}
+        title={t("сhess.23")}
         open={open}
         onCancel={handleCancel}
         footer={null}

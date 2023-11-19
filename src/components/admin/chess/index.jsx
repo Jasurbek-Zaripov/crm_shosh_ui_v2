@@ -6,6 +6,7 @@ import Button from "../../../common/button";
 import InstantBookingModal from "../../../common/instant_modal/instant_modal";
 import { OrdersBusyGet } from "../../../redux/orders";
 import { RoomsGet } from "../../../redux/rooms";
+import DemoChess from "./demo_chess";
 import styles from "./style.module.css";
 
 function ChessComponent() {
@@ -144,7 +145,7 @@ function ChessComponent() {
         </div>
       </div>
       {/* <TableChess/> */}
-      {/* <DemoChess /> */}
+      <DemoChess />
       <InstantBookingModal open={openInstantModal} setOpen={setInstantModal} />
     </div>
   );

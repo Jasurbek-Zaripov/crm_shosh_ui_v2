@@ -1,16 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
-import styles from "./style.module.css";
-import { useTranslation } from "react-i18next";
-import SelectCommon from "../../../common/select";
-import Input from "../../../common/input";
-import Button from "../../../common/button";
-import TextArea from "../../../common/textarea";
-import { useSelector, useDispatch } from "react-redux";
-import { ServicesOrdersPost } from "../../../redux/servies_orders";
-import { OrdersBusyGet, OrdersGet, OrdersPut } from "../../../redux/orders";
-import { ProductsGet, ProductsPut } from "../../../redux/products";
 import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import Button from "../../../common/button";
+import Input from "../../../common/input";
+import SelectCommon from "../../../common/select";
+import TextArea from "../../../common/textarea";
 import { ChangePost } from "../../../redux/change";
+import { OrdersBusyGet, OrdersGet } from "../../../redux/orders";
+import { ProductsGet } from "../../../redux/products";
+import { ServicesOrdersPost } from "../../../redux/servies_orders";
+import styles from "./style.module.css";
 
 const AdditServiesComponent = () => {
   const { t } = useTranslation();
@@ -24,8 +24,8 @@ const AdditServiesComponent = () => {
     dispatch(ProductsGet());
   }, []);
   useEffect(() => {
-    dispatch(OrdersGet());         
-}, [])
+    dispatch(OrdersGet());
+  }, []);
   const [orders, setOrders] = useState(null);
   const [products, setProducts] = useState(null);
   const [prices, setPrices] = useState(null);
@@ -43,42 +43,53 @@ const AdditServiesComponent = () => {
   };
   const HandleSubmitMiniBar = async (e) => {
     e.preventDefault();
-    const bodys ={
-      count : Number(ProductGet.filter(elem => elem.id == products)[0].count  - counts)
+    const bodys = {
+      count: Number(
+        ProductGet.filter((elem) => elem.id == products)[0].count - counts
+      ),
+    };
+    if (statusPayment == "Оплачено") {
+      await dispatch(
+        ChangePost({
+          full_name: OrderFind.map(
+            (elem) => elem.users.map((e) => e.name)[0]
+          )[0],
+          staff: data.id,
+          rooms: OrderFind.map((elem) => elem.rooms.id)[0],
+          cash_coming:
+            typePayment == "Наличные" ? pricesMinibar.current.value : 0,
+          enum_coming:
+            typePayment == "Перечисление" ? pricesMinibar.current.value : 0,
+        })
+      );
     }
-    if(statusPayment  == 'Оплачено' ){
-    await dispatch(
-      ChangePost({
-        full_name: OrderFind.map(elem => elem.users.map(e => e.name)[0])[0],
-        staff: data.id,
-        rooms: OrderFind.map(elem => elem.rooms.id)[0],
-        cash_coming : typePayment  == 'Наличные' ? pricesMinibar.current.value :0,
-        enum_coming : typePayment  == 'Перечисление' ? pricesMinibar.current.value :0,
-      })
-    )
-    }
-    await  axios.put(`https://api.hotelshoshmodern.uz/products/${products}` , bodys)
-    .then(res => res)
+    await axios
+      .put(`https://api.hotelshoshmodern.uz/products/${products}`, bodys)
+      .then((res) => res);
     let bodyPrices = {
       paid:
-      Number(pricesMinibar.current.value) +
-      Number(OrderGet.filter((e) => e.id == orders)[0].paid),
-      total_payable: Number(pricesMinibar.current.value) +
-      Number(OrderGet.filter((e) => e.id == orders)[0].total_payable)
+        Number(pricesMinibar.current.value) +
+        Number(OrderGet.filter((e) => e.id == orders)[0].paid),
+      total_payable:
+        Number(pricesMinibar.current.value) +
+        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable),
     };
     const bodyPrices2 = {
       debt:
         Number(pricesMinibar.current.value) +
         Number(OrderGet.filter((e) => e.id == orders)[0].debt),
-        total_payable: Number(pricesMinibar.current.value) +
-        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable)
+      total_payable:
+        Number(pricesMinibar.current.value) +
+        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable),
     };
-    if (statusPayment == 'Оплачено') {
-      await  axios.put(`https://api.hotelshoshmodern.uz/orders/${orders}` , bodyPrices)
-      .then(res => res)
-    }else{
-      await  axios.put(`https://api.hotelshoshmodern.uz/orders/${orders}` , bodyPrices2)
-      .then(res => res)
+    if (statusPayment == "Оплачено") {
+      await axios
+        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices)
+        .then((res) => res);
+    } else {
+      await axios
+        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices2)
+        .then((res) => res);
     }
 
     await dispatch(
@@ -97,38 +108,42 @@ const AdditServiesComponent = () => {
   };
   const HandleSubmitLaundry = async (e) => {
     e.preventDefault();
-       if(statusPayment  == 'Оплачено' ){
-    await dispatch(
-      ChangePost({
-        full_name: OrderFind.map(elem => elem.users.map(e => e.name)[0])[0],
-        staff: data.id,
-        rooms: OrderFind.map(elem => elem.rooms.id)[0],
-        cash_coming : typePayment  == 'Наличные' ? prices :0,
-        enum_coming : typePayment  == 'Перечисление' ? prices :0,
-        departure_date: OrderFind.map(elem => elem.departure_date)[0]
-      })
-    )
-  }
+    if (statusPayment == "Оплачено") {
+      await dispatch(
+        ChangePost({
+          full_name: OrderFind.map(
+            (elem) => elem.users.map((e) => e.name)[0]
+          )[0],
+          staff: data.id,
+          rooms: OrderFind.map((elem) => elem.rooms.id)[0],
+          cash_coming: typePayment == "Наличные" ? prices : 0,
+          enum_coming: typePayment == "Перечисление" ? prices : 0,
+          departure_date: OrderFind.map((elem) => elem.departure_date)[0],
+        })
+      );
+    }
     let bodyPrices = {
       paid:
-      Number(prices) +
-      Number(OrderGet.filter((e) => e.id == orders)[0].paid),
-      total_payable: Number(prices) +
-      Number(OrderGet.filter((e) => e.id == orders)[0].total_payable)
+        Number(prices) + Number(OrderGet.filter((e) => e.id == orders)[0].paid),
+      total_payable:
+        Number(prices) +
+        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable),
     };
     const bodyPrices2 = {
       debt:
+        Number(prices) + Number(OrderGet.filter((e) => e.id == orders)[0].debt),
+      total_payable:
         Number(prices) +
-        Number(OrderGet.filter((e) => e.id == orders)[0].debt),
-        total_payable: Number(prices) +
-        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable)
+        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable),
     };
-    if (statusPayment == 'Оплачено') {
-      await  axios.put(`https://api.hotelshoshmodern.uz/orders/${orders}` , bodyPrices)
-      .then(res => res)
-    }else{
-      await  axios.put(`https://api.hotelshoshmodern.uz/orders/${orders}` , bodyPrices2)
-      .then(res => res)
+    if (statusPayment == "Оплачено") {
+      await axios
+        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices)
+        .then((res) => res);
+    } else {
+      await axios
+        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices2)
+        .then((res) => res);
     }
     await dispatch(
       ServicesOrdersPost({
@@ -146,38 +161,42 @@ const AdditServiesComponent = () => {
   };
   const HandleSubmitPenalties = async (e) => {
     e.preventDefault();
-       if(statusPayment  == 'Оплачено' ){
-    await dispatch(
-      ChangePost({
-        full_name: OrderFind.map(elem => elem.users.map(e => e.name)[0])[0],
-        staff: data.id,
-        rooms: OrderFind.map(elem => elem.rooms.id)[0],
-        cash_coming : typePayment  == 'Наличные' ? prices :0,
-        enum_coming : typePayment  == 'Перечисление' ? prices :0,
-        departure_date: OrderFind.map(elem => elem.departure_date)[0]
-      })
-    )
-  }
+    if (statusPayment == "Оплачено") {
+      await dispatch(
+        ChangePost({
+          full_name: OrderFind.map(
+            (elem) => elem.users.map((e) => e.name)[0]
+          )[0],
+          staff: data.id,
+          rooms: OrderFind.map((elem) => elem.rooms.id)[0],
+          cash_coming: typePayment == "Наличные" ? prices : 0,
+          enum_coming: typePayment == "Перечисление" ? prices : 0,
+          departure_date: OrderFind.map((elem) => elem.departure_date)[0],
+        })
+      );
+    }
     let bodyPrices = {
       paid:
-      Number(prices) +
-      Number(OrderGet.filter((e) => e.id == orders)[0].paid),
-      total_payable: Number(prices) +
-      Number(OrderGet.filter((e) => e.id == orders)[0].total_payable)
+        Number(prices) + Number(OrderGet.filter((e) => e.id == orders)[0].paid),
+      total_payable:
+        Number(prices) +
+        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable),
     };
     const bodyPrices2 = {
       debt:
+        Number(prices) + Number(OrderGet.filter((e) => e.id == orders)[0].debt),
+      total_payable:
         Number(prices) +
-        Number(OrderGet.filter((e) => e.id == orders)[0].debt),
-        total_payable: Number(prices) +
-        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable)
+        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable),
     };
-    if (statusPayment == 'Оплачено') {
-      await  axios.put(`https://api.hotelshoshmodern.uz/orders/${orders}` , bodyPrices)
-      .then(res => res)
-    }else{
-      await  axios.put(`https://api.hotelshoshmodern.uz/orders/${orders}` , bodyPrices2)
-      .then(res => res)
+    if (statusPayment == "Оплачено") {
+      await axios
+        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices)
+        .then((res) => res);
+    } else {
+      await axios
+        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices2)
+        .then((res) => res);
     }
     await dispatch(
       ServicesOrdersPost({
@@ -198,24 +217,26 @@ const AdditServiesComponent = () => {
 
     let bodyPrices = {
       paid:
-      Number(prices) +
-      Number(OrderGet.filter((e) => e.id == orders)[0].paid),
-      total_payable: Number(prices) +
-      Number(OrderGet.filter((e) => e.id == orders)[0].total_payable)
+        Number(prices) + Number(OrderGet.filter((e) => e.id == orders)[0].paid),
+      total_payable:
+        Number(prices) +
+        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable),
     };
     const bodyPrices2 = {
       debt:
+        Number(prices) + Number(OrderGet.filter((e) => e.id == orders)[0].debt),
+      total_payable:
         Number(prices) +
-        Number(OrderGet.filter((e) => e.id == orders)[0].debt),
-        total_payable: Number(prices) +
-        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable)
+        Number(OrderGet.filter((e) => e.id == orders)[0].total_payable),
     };
-    if (statusPayment == 'Оплачено') {
-      await  axios.put(`https://api.hotelshoshmodern.uz/orders/${orders}` , bodyPrices)
-      .then(res => res)
-    }else{
-      await  axios.put(`https://api.hotelshoshmodern.uz/orders/${orders}` , bodyPrices2)
-      .then(res => res)
+    if (statusPayment == "Оплачено") {
+      await axios
+        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices)
+        .then((res) => res);
+    } else {
+      await axios
+        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices2)
+        .then((res) => res);
     }
     await dispatch(
       ServicesOrdersPost({
@@ -229,33 +250,34 @@ const AdditServiesComponent = () => {
         services: 4,
       })
     );
-       if(statusPayment  == 'Оплачено' ){
-    await dispatch(
-      ChangePost({
-        full_name: OrderFind.map(elem => elem.users.map(e => e.name)[0])[0],
-        staff: data.id,
-        rooms: OrderFind.map(elem => elem.rooms.id)[0],
-        cash_coming : typePayment  == 'Наличные' ? prices :0,
-        enum_coming : typePayment  == 'Перечисление' ? prices :0,
-        departure_date: OrderFind.map(elem => elem.departure_date)[0]
-      })
-    )
-  }
+    if (statusPayment == "Оплачено") {
+      await dispatch(
+        ChangePost({
+          full_name: OrderFind.map(
+            (elem) => elem.users.map((e) => e.name)[0]
+          )[0],
+          staff: data.id,
+          rooms: OrderFind.map((elem) => elem.rooms.id)[0],
+          cash_coming: typePayment == "Наличные" ? prices : 0,
+          enum_coming: typePayment == "Перечисление" ? prices : 0,
+          departure_date: OrderFind.map((elem) => elem.departure_date)[0],
+        })
+      );
+    }
     window.location.reload();
   };
   const options = [];
   const option = [];
   const optionTypePayment = [
     {
-      value: 'Наличные',
+      value: "Наличные",
       label: t("AdditServies.25"),
     },
     {
-      value: 'Перечисление',
+      value: "Перечисление",
       label: t("AdditServies.26"),
     },
   ];
-  console.log(optionTypePayment);
 
   const optionStatusPayment = [
     {
@@ -267,27 +289,32 @@ const AdditServiesComponent = () => {
       label: t("AdditServies.24"),
     },
   ];
-  const dataUser = JSON.parse(window.localStorage.getItem("AuthDataUser"))
-  const OrderGetFilter = OrderGet.filter(e => e.status_client == 'active')
-  OrderGetFilter.map((order) => 
-  order.filial?.filial_name == dataUser.filial.filial_name ?
-    options.push({
-      value: order.id,
-      label: order.rooms.rooms,
-    }):null);
+  const dataUser = JSON.parse(window.localStorage.getItem("AuthDataUser"));
+  const OrderGetFilter = OrderGet.filter((e) => e.status_client == "active");
+  OrderGetFilter.map((order) =>
+    order.filial?.filial_name == dataUser.filial.filial_name
+      ? options.push({
+          value: order.id,
+          label: order.rooms.rooms,
+        })
+      : null
+  );
 
-  ProductGet.map((product) => 
-  product.filial?.filial_name == dataUser.filial.filial_name && product.count > 0 ?
-    option.push({
-      value: product.id,
-      label: (
-        <>
-          <span style={{ margin: "0 3px" }}>{product.product_name}</span> |
-          <span style={{ margin: "0 3px" }}>{product.price}</span> |
-          <span style={{ margin: "0 3px" }}>{product.count}</span>
-        </>
-      ),
-    }):null);
+  ProductGet.map((product) =>
+    product.filial?.filial_name == dataUser.filial.filial_name &&
+    product.count > 0
+      ? option.push({
+          value: product.id,
+          label: (
+            <>
+              <span style={{ margin: "0 3px" }}>{product.product_name}</span> |
+              <span style={{ margin: "0 3px" }}>{product.price}</span> |
+              <span style={{ margin: "0 3px" }}>{product.count}</span>
+            </>
+          ),
+        })
+      : null
+  );
 
   return (
     <>

@@ -59,29 +59,6 @@
   border-radius: 20px !important;
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 7px !important;
-  height: 5px !important;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px #5a79e5;
-  border-radius: 50px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #5a79e5 !important;
-  border-radius: 50px !important;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555 !important ;
-}
-
 .btn-box {
   display: flex;
   align-items: center;
@@ -115,8 +92,8 @@
   padding: 12px !important;
 }
 
-.ant-tabs-content-holder{
-    margin-top: 50px !important;
+.ant-tabs-content-holder {
+  margin-top: 50px !important;
 }
 .header_table {
   display: flex;

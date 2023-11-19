@@ -1,0 +1,45 @@
+.ant-select-selector {
+  background-color: white !important;
+}
+
+.ant-picker-date-panel,
+.ant-picker-time-panel {
+  width: max-content !important;
+}
+
+#AdditServiesComponent input,
+#AdditServiesComponent select,
+#AdditServiesComponent textarea {
+  background-color: white !important;
+}
+
+hr {
+  margin: 1rem 0;
+}
+
+#AdditServiesComponent button[type="submit"] {
+  white-space: nowrap;
+  padding: 13px 18px !important;
+}
+
+#AdditServiesComponent textarea {
+  min-height: 82px;
+  resize: vertical !important;
+}
+
+#AdditServiesComponent form .SelectDiv:first-child {
+  display: none !important;
+}
+
+#AdditServiesComponent form div[class^="style_item_box"] {
+  box-shadow: 0 5px 10px 2px rgba(34, 60, 80, 0.2);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.instant_booking_box_shadow {
+  background-color: white;
+  box-shadow: 0 5px 10px 2px rgba(34, 60, 80, 0.2);
+  border-radius: 10px;
+  padding: 1rem;
+}
