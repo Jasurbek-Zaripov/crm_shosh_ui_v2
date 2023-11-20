@@ -1,19 +1,18 @@
-import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../../../../../common/button";
 import Input from "../../../../../common/input";
 import ModalCommon from "../../../../../common/modal";
 import SelectCommon from "../../../../../common/select";
-import UploadIcon from "./../../../../../assets/employees/upload-icon.svg";
-import styles from "./style.module.css";
-import { useSelector, useDispatch } from "react-redux";
 import {
+  StaffGet,
   StaffPost,
   UploadImage,
   UploadImagePassport,
-  StaffGet,
 } from "../../../../../redux/employess";
+import UploadIcon from "./../../../../../assets/employees/upload-icon.svg";
+import styles from "./style.module.css";
 
 function AddNewEmployees({ open, onCancel }) {
   const dispatch = useDispatch();
@@ -25,7 +24,6 @@ function AddNewEmployees({ open, onCancel }) {
   const [staffSureName, setStaffSureName] = useState(null);
   const [birthdays, setBirthdays] = useState(null);
   const [phoned, setPhoned] = useState(null);
-  const [emails, setEmails] = useState(null);
   const [salarie, setSalarie] = useState(null);
   const [roles, setRoles] = useState(null);
   const [password, setPassword] = useState(null);
@@ -52,7 +50,7 @@ function AddNewEmployees({ open, onCancel }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   await dispatch(
+    await dispatch(
       StaffPost({
         filial: data.filial.id,
         staff_name: staffName,
@@ -61,13 +59,13 @@ function AddNewEmployees({ open, onCancel }) {
         phone: phoned,
         image: UploadImages,
         passport: UploadImagePassports,
-        email: emails,
+        email: "",
         salary: salarie,
         role: roles,
         password: password,
       })
     );
-    window.location.reload()
+    window.location.reload();
   };
 
   return (
@@ -126,11 +124,6 @@ function AddNewEmployees({ open, onCancel }) {
         </div>
         <div className={styles.bottom}>
           <div className={styles.big_inputs}>
-            <Input
-              text={t("employees.add_employees.7")}
-              onChange={(e) => setEmails(e.target.value)}
-              style={{ width: "390px" }}
-            />
             <Input
               text={t("employees.add_employees.8")}
               onChange={(e) => setPhoned(e.target.value)}

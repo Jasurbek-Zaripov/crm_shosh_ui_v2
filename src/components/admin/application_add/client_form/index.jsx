@@ -1,18 +1,17 @@
-import { useEffect, useRef } from "react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import Input from "../../../../common/input";
-import styles from "./style.module.css";
-import { UsersPost } from "../../../../redux/users";
-import Button from "../../../../common/button";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Button from "../../../../common/button";
+import Input from "../../../../common/input";
 import { ChangePost } from "../../../../redux/change";
+import { UsersPost } from "../../../../redux/users";
+import styles from "./style.module.css";
 function ClientForm({ id }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,12 +23,11 @@ function ClientForm({ id }) {
   const [birthday, setbirthday] = useState(null);
   const [adress, setadress] = useState(null);
   const [dateof, setdateof] = useState(null);
-  const [email, setemail] = useState(null);
   const LidId = useSelector((state) => state.Lids.LidsGet.data);
   const OrderId = useSelector((state) => state.Order.OrdersGet.data);
   const OrderFind = OrderId.filter((elem) => elem.id == id);
   const data = JSON.parse(window.localStorage.getItem("AuthDataUser"));
-  
+
   let seriya = useRef();
   let name = useRef();
   let phone = useRef();
@@ -39,35 +37,53 @@ function ClientForm({ id }) {
     const body = {
       status: "busy",
     };
-    if(OrderFind.map(elem => elem.status_client)[0] == 'not_active' && OrderFind.map(elem => elem.status_payment)[0]  == 'Оплачено' ){
+    if (
+      OrderFind.map((elem) => elem.status_client)[0] == "not_active" &&
+      OrderFind.map((elem) => elem.status_payment)[0] == "Оплачено"
+    ) {
       await dispatch(
         ChangePost({
           full_name: name.current.value,
           staff: data.id,
-          rooms: OrderFind.map(elem => elem.rooms.id)[0],
-          cash_coming : OrderFind.map(elem => elem.type_payment)[0]  == 'Наличные' ? OrderFind.map(elem => elem.booking)[0] :0,
-          enum_coming : OrderFind.map(elem => elem.type_payment)[0]  == 'Перечисление' ? OrderFind.map(elem => elem.booking)[0] :0,
+          rooms: OrderFind.map((elem) => elem.rooms.id)[0],
+          cash_coming:
+            OrderFind.map((elem) => elem.type_payment)[0] == "Наличные"
+              ? OrderFind.map((elem) => elem.booking)[0]
+              : 0,
+          enum_coming:
+            OrderFind.map((elem) => elem.type_payment)[0] == "Перечисление"
+              ? OrderFind.map((elem) => elem.booking)[0]
+              : 0,
         })
       );
     }
-    if(OrderFind.map(elem => elem.status_payment)[0]  == 'Оплачено' && OrderFind.map(elem => elem.status_client)[0] == 'active' ){
+    if (
+      OrderFind.map((elem) => elem.status_payment)[0] == "Оплачено" &&
+      OrderFind.map((elem) => elem.status_client)[0] == "active"
+    ) {
       await dispatch(
         ChangePost({
           full_name: name.current.value,
           staff: data.id,
-          rooms: OrderFind.map(elem => elem.rooms.id)[0],
-          cash_coming : OrderFind.map(elem => elem.type_payment)[0]  == 'Наличные' ? OrderFind.map(elem => elem.booking)[0] :0,
-          enum_coming : OrderFind.map(elem => elem.type_payment)[0]  == 'Перечисление' ? OrderFind.map(elem => elem.booking)[0] :0,
-          arrival_date: OrderFind.map(elem => elem.arrival_date)[0]
+          rooms: OrderFind.map((elem) => elem.rooms.id)[0],
+          cash_coming:
+            OrderFind.map((elem) => elem.type_payment)[0] == "Наличные"
+              ? OrderFind.map((elem) => elem.booking)[0]
+              : 0,
+          enum_coming:
+            OrderFind.map((elem) => elem.type_payment)[0] == "Перечисление"
+              ? OrderFind.map((elem) => elem.booking)[0]
+              : 0,
+          arrival_date: OrderFind.map((elem) => elem.arrival_date)[0],
         })
       );
-    }else if(OrderFind.map(elem => elem.status_payment)[0]  == 'Долговое'){
+    } else if (OrderFind.map((elem) => elem.status_payment)[0] == "Долговое") {
       await dispatch(
         ChangePost({
           full_name: name.current.value,
           staff: data.id,
-          rooms: OrderFind.map(elem => elem.rooms.id)[0],
-          arrival_date: OrderFind.map(elem => elem.arrival_date)[0]
+          rooms: OrderFind.map((elem) => elem.rooms.id)[0],
+          arrival_date: OrderFind.map((elem) => elem.arrival_date)[0],
         })
       );
     }
@@ -82,7 +98,7 @@ function ClientForm({ id }) {
         number: number.current.value,
         adress: adress,
         dateof: DateFormat2(value2.$d),
-        email: email,
+        email: "",
         orders: id,
       })
     );
@@ -178,14 +194,6 @@ function ClientForm({ id }) {
             <p>{t("application_add.32")}</p>
             <input ref={phone} placeholder={0} />
           </div>
-          <Input
-            value={email}
-            onChange={(e) => setemail(e.target.value)}
-            style={{ marginLeft: "12px" }}
-            text={t("application_add.33")}
-            placeholder={0}
-            type="email"
-          />
         </>
 
         <Button style={{ width: "130px" }}>{t("application_add.21")}</Button>

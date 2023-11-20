@@ -1,26 +1,24 @@
-import { useEffect, useRef } from "react";
-import "./app.css";
-import { useState } from "react";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import axios from "axios";
+import dayjs from "dayjs";
+import * as React from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "../../../../common/button";
 import Input from "../../../../common/input";
 import SelectCommon from "../../../../common/select";
-import TextArea from "../../../../common/textarea";
-import { OrdersDelete, OrdersPost, OrdersPut } from "../../../../redux/orders";
-import { RoomsEmpytGet, RoomsGet, RoomsPut } from "../../../../redux/rooms";
-import styles from "./style.module.css";
-import * as React from "react";
-import dayjs from "dayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import axios from "axios";
-import { UsersPost } from "../../../../redux/users";
-import { OldOrdersPost } from "../../../../redux/old_orders";
 import { ChangePost } from "../../../../redux/change";
+import { OldOrdersPost } from "../../../../redux/old_orders";
+import { OrdersPost } from "../../../../redux/orders";
+import { RoomsEmpytGet, RoomsGet } from "../../../../redux/rooms";
+import { UsersPost } from "../../../../redux/users";
+import "./app.css";
+import styles from "./style.module.css";
 function ApplictionForm({ id }) {
   const [value, setValue] = useState(dayjs(""));
   const [value2, setValue2] = useState(dayjs(""));
@@ -82,7 +80,7 @@ function ApplictionForm({ id }) {
   const Countery = useRef();
   const [PaymentType, setPaymentType] = useState(null);
   const [Discount, setDiscount] = useState(null);
-  const [Color , setColor] = useState('');
+  const [Color, setColor] = useState("");
   const Company = useRef();
   const Comment = useRef();
   const [StatusPayment, setStatusPayment] = useState(null);
@@ -100,9 +98,9 @@ function ApplictionForm({ id }) {
     setNumberRights(diffDays);
   }, [date1, date2]);
   useEffect(() => {
-    dispatch(RoomsGet())
-  }, [])
-  
+    dispatch(RoomsGet());
+  }, []);
+
   useEffect(() => {
     const timeDiff = Math.abs(date1 - date3);
     const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -124,34 +122,34 @@ function ApplictionForm({ id }) {
     OrdersFilter.map((elem) => Number(elem.rooms.definition))[0] *
       Number(NumberRights2);
 
-     async function HandleOldOrders() {
-      await dispatch(
-        OldOrdersPost({
-          rooms:OrdersFilter.map((elem) =>elem.rooms.rooms)[0],
-          number_night: NumberRights2,
-          phone: OrdersFilter.map((elem) => elem.phone)[0],
-          definition: OrdersFilter.map((elem) => elem.definition)[0],
-          sale: OrdersFilter.map((elem) => elem.sale)[0],
-          arrival_date: OrdersFilter.map((elem) => elem.arrival_date)[0],
-          departure_date:OrdersFilter.map((elem) => elem.departure_date)[0],
-          early_release: DateFormat(value.$d),
-          count_users: OrdersFilter.map((elem) => elem.count_users)[0],
-          company: OrdersFilter.map((elem) => elem.company)[0],
-          total_payable:
-            OrdersFilter.map((elem) => Number(elem.total_payable))[0],
-          booking: OrdersFilter.map((elem) => elem.booking)[0],
-          country: OrdersFilter.map((elem) => elem.country)[0],
-          comentary: OrdersFilter.map((elem) => elem.comentary)[0],
-          paid:OrdersFilter.map((elem) => elem.paid)[0],
-          debt:
-          OrdersFilter.map((elem) => elem.debt)[0],
-          company_details: OrdersFilter.map((elem) => elem.company_details)[0],
-          orders : window.localStorage.getItem("OrdersData"),
-          refund : ratio,
-          users : OrdersFilter.map((elem) => elem.users.map((e) => e.name)[0])[0],
-        })
-      );
-      }
+  async function HandleOldOrders() {
+    await dispatch(
+      OldOrdersPost({
+        rooms: OrdersFilter.map((elem) => elem.rooms.rooms)[0],
+        number_night: NumberRights2,
+        phone: OrdersFilter.map((elem) => elem.phone)[0],
+        definition: OrdersFilter.map((elem) => elem.definition)[0],
+        sale: OrdersFilter.map((elem) => elem.sale)[0],
+        arrival_date: OrdersFilter.map((elem) => elem.arrival_date)[0],
+        departure_date: OrdersFilter.map((elem) => elem.departure_date)[0],
+        early_release: DateFormat(value.$d),
+        count_users: OrdersFilter.map((elem) => elem.count_users)[0],
+        company: OrdersFilter.map((elem) => elem.company)[0],
+        total_payable: OrdersFilter.map((elem) =>
+          Number(elem.total_payable)
+        )[0],
+        booking: OrdersFilter.map((elem) => elem.booking)[0],
+        country: OrdersFilter.map((elem) => elem.country)[0],
+        comentary: OrdersFilter.map((elem) => elem.comentary)[0],
+        paid: OrdersFilter.map((elem) => elem.paid)[0],
+        debt: OrdersFilter.map((elem) => elem.debt)[0],
+        company_details: OrdersFilter.map((elem) => elem.company_details)[0],
+        orders: window.localStorage.getItem("OrdersData"),
+        refund: ratio,
+        users: OrdersFilter.map((elem) => elem.users.map((e) => e.name)[0])[0],
+      })
+    );
+  }
 
   async function HandleOrders() {
     await dispatch(
@@ -181,7 +179,7 @@ function ApplictionForm({ id }) {
             : OrdersFilter.map((elem) => elem.paid)[0],
         debt:
           StatusPayment == "Долговое"
-            ? OrdersFilter.map((elem) => Number(elem.debt))[0]+
+            ? OrdersFilter.map((elem) => Number(elem.debt))[0] +
               Number(TotalPay.current.value)
             : OrdersFilter.map((elem) => Number(elem.debt))[0],
         status_payment: StatusPayment,
@@ -217,7 +215,7 @@ function ApplictionForm({ id }) {
         dateof: OrdersFilter.map(
           (elem) => elem.users.map((e) => e.dateof)[0]
         )[0],
-        email: OrdersFilter.map((elem) => elem.users.map((e) => e.email)[0])[0],
+        email: "",
         orders: window.localStorage.getItem("OrdersData"),
       })
     );
@@ -236,17 +234,20 @@ function ApplictionForm({ id }) {
     const bodyPut = {
       departure_date: DateFormat(value.$d),
       status: "empty",
-      color : "#0d1247"
+      color: "#0d1247",
     };
-    if(StatusPayment == 'Оплачено'){
+    if (StatusPayment == "Оплачено") {
       await dispatch(
         ChangePost({
-          full_name: OrdersFilter.map((elem) => elem.users.map((e) => e.name)[0])[0],
+          full_name: OrdersFilter.map(
+            (elem) => elem.users.map((e) => e.name)[0]
+          )[0],
           staff: data.id,
           rooms: Number(rooms),
-          cash_coming : PaymentType  == 'Наличные' ? TotalPay.current.value :0,
-          enum_coming : PaymentType  == 'Перечисление' ? TotalPay.current.value :0,
-          arrival_date: DateFormat(value.$d)
+          cash_coming: PaymentType == "Наличные" ? TotalPay.current.value : 0,
+          enum_coming:
+            PaymentType == "Перечисление" ? TotalPay.current.value : 0,
+          arrival_date: DateFormat(value.$d),
         })
       );
       // await dispatch(
@@ -270,7 +271,7 @@ function ApplictionForm({ id }) {
         body2
       )
       .then((res) => res);
-// eski orderni empty qilish va ketish vaqtini qisqartirish
+    // eski orderni empty qilish va ketish vaqtini qisqartirish
     await axios
       .put(`https://api.hotelshoshmodern.uz/orders/${id}`, bodyPut)
       .then((res) => res);
@@ -316,39 +317,38 @@ function ApplictionForm({ id }) {
   );
   const dataColor = [
     {
-      id: 1, 
-      color : "red",
+      id: 1,
+      color: "red",
     },
     {
-      id: 2, 
-      color : "yellow",
+      id: 2,
+      color: "yellow",
     },
     {
-      id: 3, 
-      color : "green",
+      id: 3,
+      color: "green",
     },
     {
-      id: 4, 
-      color : "gray",
+      id: 4,
+      color: "gray",
     },
     {
-      id: 5, 
-      color : "blue",
+      id: 5,
+      color: "blue",
     },
     {
-      id: 6, 
-      color : "grow",
+      id: 6,
+      color: "grow",
     },
     {
-      id: 7, 
-      color : "pink",
+      id: 7,
+      color: "pink",
     },
     {
-      id: 8, 
-      color : "black",
+      id: 8,
+      color: "black",
     },
-
-  ]
+  ];
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -434,7 +434,11 @@ function ApplictionForm({ id }) {
 
                 <div className={styles.inputdivs}>
                   <p>{t("application_add.12")}</p>
-                  <input defaultValue={elem.count_users} ref={NumberGuests} type={"number"} />
+                  <input
+                    defaultValue={elem.count_users}
+                    ref={NumberGuests}
+                    type={"number"}
+                  />
                 </div>
                 {/* <Input
           required
@@ -458,8 +462,7 @@ function ApplictionForm({ id }) {
                   <input
                     required
                     value={
-                      RoomsDefination * NumberRights -
-                      NumberRights * Discount
+                      RoomsDefination * NumberRights - NumberRights * Discount
                     }
                     ref={TotalPay}
                     placeholder={0}
@@ -484,16 +487,25 @@ function ApplictionForm({ id }) {
                   ></textarea>
                 </div>
                 <div className={styles.colors}>
-          <p>{t("application_add.38")}</p>
-          <input type="color"  onChange={e => setColor(e.target.value)} defaultValue={"#0419fd"} />
-          </div>
-          <div className={styles.color_div}>
-            {dataColor.map((elem , index) =>
-                          <button  className={styles.box} type="button" onClick={(e) => setColor(e.target.value)} value={elem.color} key={index}  style={{background : elem.color}}>
-
-                          </button>
-            )}
-          </div>
+                  <p>{t("application_add.38")}</p>
+                  <input
+                    type="color"
+                    onChange={(e) => setColor(e.target.value)}
+                    defaultValue={"#0419fd"}
+                  />
+                </div>
+                <div className={styles.color_div}>
+                  {dataColor.map((elem, index) => (
+                    <button
+                      className={styles.box}
+                      type="button"
+                      onClick={(e) => setColor(e.target.value)}
+                      value={elem.color}
+                      key={index}
+                      style={{ background: elem.color }}
+                    ></button>
+                  ))}
+                </div>
               </div>
 
               <div className={styles.bottom}>

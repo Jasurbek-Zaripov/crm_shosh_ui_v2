@@ -1,22 +1,19 @@
-import React, { useState } from "react";
-import { Button, notification, Space } from "antd";
 import {
+  BellOutlined,
+  CommentOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  CommentOutlined,
-  BellOutlined,
   QuestionCircleOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, theme } from "antd";
+import { Layout, Menu, notification, Space, theme } from "antd";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
+import { TaskDelete, TaskGet } from "../../redux/task/index";
 import LanguageComponent from "../header-language";
 import "./sidebar.css";
-import Cookies from "universal-cookie";
-import { useNavigate } from "react-router-dom";
-import { TaskGet, TaskDelete } from "../../redux/task/index";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
 const { Header, Sider, Content } = Layout;
 
 const Sidebar = ({ children, items }) => {
@@ -35,13 +32,13 @@ const Sidebar = ({ children, items }) => {
     token: { colorBgContainer },
   } = theme.useToken();
   const close = () => {
-    return  "Notification was closed. Either the close button was clicked or duration time elapsed."
+    return "Notification was closed. Either the close button was clicked or duration time elapsed.";
   };
   const dispatch = useDispatch();
   const HandleDelete = async (e) => {
     await dispatch(TaskDelete(e.currentTarget.id));
     dispatch(TaskGet());
-    window.location.reload()
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -51,7 +48,6 @@ const Sidebar = ({ children, items }) => {
   const TaskGets = useSelector((state) => state.Task.TaskGet.data);
   const findId = TaskGets.filter((task) => task.staff.id == data.id);
   const taskLength = findId.filter((length) => length.status == "sent");
-
 
   const [api, contextHolder] = notification.useNotification();
   const openNotification = () => {
@@ -81,7 +77,9 @@ const Sidebar = ({ children, items }) => {
                     <p>{task.staff.role}</p>
                   </div>
                 </div>
-                {task.status == 'sent' ? <div className="sent-dot"></div> : null}
+                {task.status == "sent" ? (
+                  <div className="sent-dot"></div>
+                ) : null}
               </div>
               <div className="message-box">
                 <p>{task.task}</p>
@@ -141,7 +139,9 @@ const Sidebar = ({ children, items }) => {
               <CommentOutlined style={{ fontSize: "20px", color: "#484343" }} />
               {contextHolder}
               <div className="task-div">
-               {taskLength.length ?  <span className="task-length">{taskLength.length}</span> : null}
+                {taskLength.length ? (
+                  <span className="task-length">{taskLength.length}</span>
+                ) : null}
                 <BellOutlined
                   onClick={openNotification}
                   style={{ fontSize: "20px", color: "#484343" }}
@@ -157,9 +157,14 @@ const Sidebar = ({ children, items }) => {
                 <p>
                   {data.staff_name} {data.staff_surname}
                 </p>
-                <p>{data.email}</p>
               </div>
-              <img src={data.image} className="user-icon" width={50} height={50} alt="" />
+              <img
+                src={data.image}
+                className="user-icon"
+                width={50}
+                height={50}
+                alt=""
+              />
               <button onClick={HandleRemove}>{t("admin_header.0")}</button>
             </div>
           </div>

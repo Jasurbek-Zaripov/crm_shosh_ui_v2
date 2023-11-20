@@ -1,42 +1,37 @@
 import React from "react";
-import TableCommon from "../../../../common/table";
 import { useTranslation } from "react-i18next";
+import TableCommon from "../../../../common/table";
+import styles from "./style.module.css";
 import "./table.css";
-import { useDownloadExcel } from "react-export-table-to-excel";
-import styles from "./style.module.css"
 const RoomUser = ({ dataFind }) => {
   const { t } = useTranslation();
   const data = [];
   dataFind?.map((order) => {
-    order.users.map((elem) =>     data.push({
+    order.users.map((elem) =>
+      data.push({
         id: elem.id,
         name: (
-          <div style={{display:"flex" , alignItems:'center'}}>
-            <span >{elem.name} </span>
-          <span style={{ marginRight:"10px" , marginLeft:"10px"}}>{elem.surname}</span> 
-          <p style={{display:"flex" , margin:0, padding:0 ,}}>{elem.father_name}</p> 
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span>{elem.name} </span>
+            <span style={{ marginRight: "10px", marginLeft: "10px" }}>
+              {elem.surname}
+            </span>
+            <p style={{ display: "flex", margin: 0, padding: 0 }}>
+              {elem.father_name}
+            </p>
           </div>
         ),
         dateofarrival: (
-              <span >{elem.seriya} {elem.number} </span>
-          ),
-          departuredate: (
-            <span >{elem.birthday} </span>
+          <span>
+            {elem.seriya} {elem.number}{" "}
+          </span>
         ),
-        checkintime: (
-            <span >{elem.dateof} </span>
-        ),
-        departuretime:(
-            <span>{elem.adress}</span>
-        ),
-        numberofpeople:(
-            <span>{elem.phone}</span>
-        ),
-        tariff:(
-            <span>{elem.email}</span>
-        )
-      }))
-
+        departuredate: <span>{elem.birthday} </span>,
+        checkintime: <span>{elem.dateof} </span>,
+        departuretime: <span>{elem.adress}</span>,
+        numberofpeople: <span>{elem.phone}</span>,
+      })
+    );
   });
 
   const columns = [
@@ -45,20 +40,19 @@ const RoomUser = ({ dataFind }) => {
       dataIndex: "name",
       key: "name",
       fixed: "left",
-      width:330
+      width: 330,
     },
     {
       title: `${t("application_add.28")}`,
       dataIndex: "dateofarrival",
       key: "dateofarrival",
-      width:120
+      width: 120,
     },
     {
       title: `${t("application_add.29")}`,
       dataIndex: "departuredate",
       key: "departuredate",
-      width:120
-
+      width: 120,
     },
     {
       title: `${t("application_add.30")}`,
@@ -75,15 +69,10 @@ const RoomUser = ({ dataFind }) => {
       dataIndex: "numberofpeople",
       key: "numberofpeople",
     },
-    {
-      title: `${t("application_add.33")}`,
-      dataIndex: "tariff",
-      key: "tariff",
-    },
   ];
   return (
     <div className={styles.Wrapper}>
-    <h2>{t("Room.37")}</h2>
+      <h2>{t("Room.37")}</h2>
       <TableCommon
         pagination={false}
         bordered

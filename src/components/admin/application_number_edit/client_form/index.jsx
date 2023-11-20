@@ -1,18 +1,16 @@
-import { useEffect, useRef } from "react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import Input from "../../../../common/input";
-import styles from "./style.module.css";
-import { UsersPost } from "../../../../redux/users";
-import Button from "../../../../common/button";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { ChangePost } from "../../../../redux/change";
+import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Button from "../../../../common/button";
+import Input from "../../../../common/input";
+import { UsersPost } from "../../../../redux/users";
+import styles from "./style.module.css";
 function ClientForm({ id }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,12 +22,11 @@ function ClientForm({ id }) {
   const [birthday, setbirthday] = useState(null);
   const [adress, setadress] = useState(null);
   const [dateof, setdateof] = useState(null);
-  const [email, setemail] = useState(null);
   const LidId = useSelector((state) => state.Lids.LidsGet.data);
   const OrderId = useSelector((state) => state.Order.OrdersGet.data);
   const OrderFind = OrderId.filter((elem) => elem.id == id);
   const data = JSON.parse(window.localStorage.getItem("AuthDataUser"));
-  
+
   let seriya = useRef();
   let name = useRef();
   let phone = useRef();
@@ -39,7 +36,6 @@ function ClientForm({ id }) {
     const body = {
       status: "busy",
     };
-    
 
     await dispatch(
       UsersPost({
@@ -52,7 +48,7 @@ function ClientForm({ id }) {
         number: number.current.value,
         adress: adress,
         dateof: DateFormat2(value2.$d),
-        email: email,
+        email: "",
         orders: id,
       })
     );
@@ -149,15 +145,6 @@ function ClientForm({ id }) {
             <p>{t("application_add.32")}</p>
             <input ref={phone} placeholder={0} />
           </div>
-          <Input
-            required
-            value={email}
-            onChange={(e) => setemail(e.target.value)}
-            style={{ marginLeft: "12px" }}
-            text={t("application_add.33")}
-            placeholder={0}
-            type="email"
-          />
         </>
 
         <Button style={{ width: "130px" }}>{t("application_add.21")}</Button>

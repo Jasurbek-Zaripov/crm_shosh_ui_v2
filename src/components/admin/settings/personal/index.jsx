@@ -1,34 +1,27 @@
+import { useFormik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useFormik } from "formik";
-import Input from "../../../../common/input";
-import styles from "./style.module.css";
 import Button from "../../../../common/button";
+import Input from "../../../../common/input";
 import ImageUpload from "./image_uploud";
+import styles from "./style.module.css";
 
 const PersonalTabpanel = () => {
   const { t } = useTranslation();
-  const dataUser = JSON.parse(window.localStorage.getItem("AuthDataUser"))
+  const dataUser = JSON.parse(window.localStorage.getItem("AuthDataUser"));
 
   const InputData = [
     {
       id: 1,
       name: "name",
-      type:"text",    
+      type: "text",
       text: t("Settings.personal_data.1"),
       placeholder: dataUser.staff_name,
     },
     {
-      id: 2,
-      name: "email",
-      type:"email",    
-      text: t("Settings.personal_data.2"),
-      placeholder: dataUser.email,
-    },
-    {
       id: 3,
       name: "password",
-      type:"password",    
+      type: "password",
       text: t("Settings.personal_data.3"),
     },
   ];
@@ -42,7 +35,7 @@ const PersonalTabpanel = () => {
       deadline: "",
     },
     onSubmit: (values) => {
-      return values
+      return values;
     },
   });
   return (
