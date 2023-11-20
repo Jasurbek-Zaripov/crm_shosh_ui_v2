@@ -1,2 +1,4 @@
 export const API_URL =
-  "http://localhost:1010" || "https://api.hotelshoshmodern.uz";
+  process.env.REACT_APP_HOST ||
+  "https://crm-test-back.hotelshoshmodern.uz" ||
+  "https://api.hotelshoshmodern.uz";
