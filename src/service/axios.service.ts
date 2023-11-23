@@ -67,11 +67,14 @@ export async function RoomUpdate(roomId: number, body: Partial<RoomUpdate>) {
   axios.put(`${API_URL}/rooms/${roomId}`, body).then((res) => res.data?.data);
 }
 export async function EmptyRooms() {
-  return axios.get(`${API_URL}/emptyrooms`).then((res) => res.data?.data); // tekshirish kerak reduxda ham !!!!
+  return axios.get(`${API_URL}/emptyrooms`).then((res) => res.data?.data);
+}
+export async function GetRooms() {
+  return axios.get(`${API_URL}/rooms`).then((res) => res.data);
 }
 
 export async function RoomsById(id: number) {
-  return axios.get(`${API_URL}/rooms/${id}`).then((res) => res.data?.data); // tekshirish kerak
+  return axios.get(`${API_URL}/rooms/${id}`).then((res) => res.data?.data);
 }
 /************************ Orders ************************/
 export async function OrderCreate(body: OrderCreate) {

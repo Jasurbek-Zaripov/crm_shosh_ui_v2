@@ -1,56 +1,58 @@
-import React, { useEffect, useRef, useState } from "react";
-import TableCommon from "../../../../../common/table/index";
-import Button from "../../../../../common/button/index";
-import { data } from "./tableData";
-import { useTranslation } from "react-i18next";
 import { Table } from "antd";
-import { ChangeAdminGet, ChangeDelete } from "../../../../../redux/change";
-import "../table.css";
-import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import AddExpenes from "./add_expense";
-import styles from "./style.module.css"
-import {Row , Col} from "react-grid-system"
-import { ConsumptionAdminGet } from "../../../../../redux/consumption";
-import ModalCommon from "../../../../../common/modal";
+import React, { useEffect, useRef, useState } from "react";
+import { Col, Row } from "react-grid-system";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import ReactToPrint from "react-to-print";
+import Button from "../../../../../common/button/index";
+import ModalCommon from "../../../../../common/modal";
+import TableCommon from "../../../../../common/table/index";
+import { ChangeAdminGet } from "../../../../../redux/change";
+import { ConsumptionAdminGet } from "../../../../../redux/consumption";
+import { API_URL } from "../../../../../utils/api";
+import "../table.css";
+import AddExpenes from "./add_expense";
+import styles from "./style.module.css";
 const SmenaTable = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const component = useRef();
 
-  const [open , setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const HandleOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
   const HandleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
   useEffect(() => {
     dispatch(ChangeAdminGet());
   }, []);
   useEffect(() => {
     dispatch(ConsumptionAdminGet());
   }, []);
-  const dataUser = JSON.parse(window.localStorage.getItem("AuthDataUser"))
+  const dataUser = JSON.parse(window.localStorage.getItem("AuthDataUser"));
 
   const Orders = useSelector((state) => state.Order.OrdersBusyGet.data);
 
   function sumCashComing(orders) {
     let sum = 0;
-    dataSmenaFind.map((elem) =>  sum += Number(elem.cash_coming));
+    dataSmenaFind.map((elem) => (sum += Number(elem.cash_coming)));
     return Number(sum);
   }
 
   function EnumComing() {
     let sum = 0;
-    dataSmenaFind.map((elem) =>  sum += Number(elem.enum_coming));
+    dataSmenaFind.map((elem) => (sum += Number(elem.enum_coming)));
 
     return Number(sum);
   }
 
   const dataSmena = useSelector((state) => state.Change.ChangeAdminGet.data);
-  const dataSmena2 = useSelector((state) => state.Consumption.ConsumptionAdminGet.data);
+  const dataSmena2 = useSelector(
+    (state) => state.Consumption.ConsumptionAdminGet.data
+  );
   const dataSmenaFind = dataSmena.filter(
     (elem) =>
       elem.staff?.id ==
@@ -61,31 +63,40 @@ const SmenaTable = () => {
       elem.staff?.id ==
       JSON.parse(window.localStorage.getItem("AuthDataUser"))?.id
   );
-  console.log();
 
   function EnumComingRasxod() {
     let sum = 0;
-    dataSmenaFind.map((elem) =>  sum += Number(elem.transfer_exp));
+    dataSmenaFind.map((elem) => (sum += Number(elem.transfer_exp)));
 
     return sum;
   }
   function EnumComingRasxod2() {
     let sum = 0;
-    dataSmenaFind.map((elem) =>  sum += Number(elem.cash_flow));
+    dataSmenaFind.map((elem) => (sum += Number(elem.cash_flow)));
     return sum;
   }
   const data = [];
-  const HandleDelete = async() =>{
+  const HandleDelete = async () => {
     const body = {
-      id : JSON.parse(window.localStorage.getItem("AuthDataUser")).id
-    }
-    await axios.delete(`https://api.hotelshoshmodern.uz/changedelete/${JSON.parse(window.localStorage.getItem("AuthDataUser")).id}`)
-    .then(res => res)
-    await axios.delete(`https://api.hotelshoshmodern.uz/consumption/${JSON.parse(window.localStorage.getItem("AuthDataUser")).id}`)
-    .then(res => res)
-    window.location.reload()
-  }
-  const data2 = []
+      id: JSON.parse(window.localStorage.getItem("AuthDataUser")).id,
+    };
+    await axios
+      .delete(
+        `${API_URL}/changedelete/${
+          JSON.parse(window.localStorage.getItem("AuthDataUser")).id
+        }`
+      )
+      .then((res) => res);
+    await axios
+      .delete(
+        `${API_URL}/consumption/${
+          JSON.parse(window.localStorage.getItem("AuthDataUser")).id
+        }`
+      )
+      .then((res) => res);
+    window.location.reload();
+  };
+  const data2 = [];
   dataSmenaFind.map((elem) => {
     data.push({
       number: elem.rooms?.rooms,
@@ -96,14 +107,12 @@ const SmenaTable = () => {
       arrivaldate: elem.arrival_date,
       consuptioncategory: elem.consumption_category,
       cashflow: elem.transfer_exp,
-      transferexp:  elem.cash_flow,
+      transferexp: elem.cash_flow,
       comment: elem.comentary,
     });
   });
 
-  const columnss = [
-
-  ]
+  const columnss = [];
   const columns = [
     {
       title: "№",
@@ -161,10 +170,8 @@ const SmenaTable = () => {
       key: "comment",
       width: 200,
     },
-
-
   ];
-  const [open4 , setOpen4] = useState(false);
+  const [open4, setOpen4] = useState(false);
   const HandleOpen4 = () => {
     setOpen4(true);
   };
@@ -173,41 +180,59 @@ const SmenaTable = () => {
   };
   return (
     <>
-      <Row ref={component} style={{padding:"10px"}}>
-        <Col style={{padding:"0px"}} lg={12}>
-        <TableCommon
-        className="table-short"
-        bordered
-        isFooter={true}
-        isNone={true}
-        columns={columns}
-        data={data}
- 
-        summary={() => (
-          <Table.Summary>
-            <Table.Summary.Row>
-              <Table.Summary.Cell
-                index={0}
-                colSpan={2}
-                fixed="left"
-                className="tablefull"
-              >
-                {t("Finance.table.11")} : {(sumCashComing() + EnumComing()).toLocaleString()}
-              </Table.Summary.Cell>
-              <Table.Summary.Cell index={2}>{sumCashComing().toLocaleString()}</Table.Summary.Cell>
-              <Table.Summary.Cell index={3}>{EnumComing().toLocaleString()}</Table.Summary.Cell>
-              <Table.Summary.Cell index={4}>денежное пособие: { (sumCashComing() - EnumComingRasxod()).toLocaleString()}</Table.Summary.Cell>
-              <Table.Summary.Cell index={5}>общие затраты : {(EnumComingRasxod() + EnumComingRasxod2()).toLocaleString()}</Table.Summary.Cell>
-              <Table.Summary.Cell index={6}></Table.Summary.Cell>
-              <Table.Summary.Cell index={7}>{EnumComingRasxod().toLocaleString()}</Table.Summary.Cell>
-              <Table.Summary.Cell index={8}>{EnumComingRasxod2().toLocaleString()}</Table.Summary.Cell>
-              <Table.Summary.Cell index={9}>Перечисление расход: {(EnumComing() - EnumComingRasxod2()).toLocaleString()}</Table.Summary.Cell>
-
-
-            </Table.Summary.Row>
-          </Table.Summary>
-        )}
-      /></Col>
+      <Row ref={component} style={{ padding: "10px" }}>
+        <Col style={{ padding: "0px" }} lg={12}>
+          <TableCommon
+            className="table-short"
+            bordered
+            isFooter={true}
+            isNone={true}
+            columns={columns}
+            data={data}
+            summary={() => (
+              <Table.Summary>
+                <Table.Summary.Row>
+                  <Table.Summary.Cell
+                    index={0}
+                    colSpan={2}
+                    fixed="left"
+                    className="tablefull"
+                  >
+                    {t("Finance.table.11")} :{" "}
+                    {(sumCashComing() + EnumComing()).toLocaleString()}
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={2}>
+                    {sumCashComing().toLocaleString()}
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={3}>
+                    {EnumComing().toLocaleString()}
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={4}>
+                    денежное пособие:{" "}
+                    {(sumCashComing() - EnumComingRasxod()).toLocaleString()}
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={5}>
+                    общие затраты :{" "}
+                    {(
+                      EnumComingRasxod() + EnumComingRasxod2()
+                    ).toLocaleString()}
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={6}></Table.Summary.Cell>
+                  <Table.Summary.Cell index={7}>
+                    {EnumComingRasxod().toLocaleString()}
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={8}>
+                    {EnumComingRasxod2().toLocaleString()}
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={9}>
+                    Перечисление расход:{" "}
+                    {(EnumComing() - EnumComingRasxod2()).toLocaleString()}
+                  </Table.Summary.Cell>
+                </Table.Summary.Row>
+              </Table.Summary>
+            )}
+          />
+        </Col>
         {/* <Col style={{padding:"0px"}} lg={6} >
         <TableCommon
         className="table-short"
@@ -235,32 +260,31 @@ const SmenaTable = () => {
         )}
       />
         </Col> */}
-      
       </Row>
       <div className="buton">
-                  <Button
-                   onClick={HandleOpen}
-                    style={{
-                      width: "25%",
-                      height: "100%",
-                      borderTopRightRadius: "10px",
-                      borderRadius: "0",
-                    }}
-                  >
-                    {t("Finance.table.expensTable.11")}
-                  </Button>
-                  <Button
-                  onClick={HandleOpen4}
-                    style={{
-                      width: "25%",
-                      height: "100%",
-                      borderTopRightRadius: "10px",
-                      borderRadius: "0",
-                    }}
-                  >
-                    {t("Finance.table.smenaTable.6")}
-                  </Button>
-                  <ReactToPrint
+        <Button
+          onClick={HandleOpen}
+          style={{
+            width: "25%",
+            height: "100%",
+            borderTopRightRadius: "10px",
+            borderRadius: "0",
+          }}
+        >
+          {t("Finance.table.expensTable.11")}
+        </Button>
+        <Button
+          onClick={HandleOpen4}
+          style={{
+            width: "25%",
+            height: "100%",
+            borderTopRightRadius: "10px",
+            borderRadius: "0",
+          }}
+        >
+          {t("Finance.table.smenaTable.6")}
+        </Button>
+        <ReactToPrint
           trigger={() => (
             <Button
               // onClick={HandleClose3}
@@ -276,13 +300,22 @@ const SmenaTable = () => {
           )}
           content={() => component.current}
         />
-                </div>
-      <AddExpenes open={open} onCancel={HandleClose} HandleClose={HandleClose}/>
-      <ModalCommon titleText={`${t("Finance.table.smenaTable.6")} ?`} onCancel={HandleClose4} width={390} open={open4}>
-      <div className={styles.buttonsClose}>
-                        <button onClick={HandleClose4}>{t("Room.36")}</button>
-                        <button onClick={HandleDelete}>{t("Room.35")}</button>
-                   </div>
+      </div>
+      <AddExpenes
+        open={open}
+        onCancel={HandleClose}
+        HandleClose={HandleClose}
+      />
+      <ModalCommon
+        titleText={`${t("Finance.table.smenaTable.6")} ?`}
+        onCancel={HandleClose4}
+        width={390}
+        open={open4}
+      >
+        <div className={styles.buttonsClose}>
+          <button onClick={HandleClose4}>{t("Room.36")}</button>
+          <button onClick={HandleDelete}>{t("Room.35")}</button>
+        </div>
       </ModalCommon>
     </>
   );

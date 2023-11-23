@@ -10,6 +10,7 @@ import { ChangePost } from "../../../redux/change";
 import { OrdersBusyGet, OrdersGet } from "../../../redux/orders";
 import { ProductsGet } from "../../../redux/products";
 import { ServicesOrdersPost } from "../../../redux/servies_orders";
+import { API_URL } from "../../../utils/api";
 import styles from "./style.module.css";
 
 const AdditServiesComponent = () => {
@@ -64,7 +65,7 @@ const AdditServiesComponent = () => {
       );
     }
     await axios
-      .put(`https://api.hotelshoshmodern.uz/products/${products}`, bodys)
+      .put(`${API_URL}/products/${products}`, bodys)
       .then((res) => res);
     let bodyPrices = {
       paid:
@@ -84,11 +85,11 @@ const AdditServiesComponent = () => {
     };
     if (statusPayment == "Оплачено") {
       await axios
-        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices)
+        .put(`${API_URL}/orders/${orders}`, bodyPrices)
         .then((res) => res);
     } else {
       await axios
-        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices2)
+        .put(`${API_URL}/orders/${orders}`, bodyPrices2)
         .then((res) => res);
     }
 
@@ -138,11 +139,11 @@ const AdditServiesComponent = () => {
     };
     if (statusPayment == "Оплачено") {
       await axios
-        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices)
+        .put(`${API_URL}/orders/${orders}`, bodyPrices)
         .then((res) => res);
     } else {
       await axios
-        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices2)
+        .put(`${API_URL}/orders/${orders}`, bodyPrices2)
         .then((res) => res);
     }
     await dispatch(
@@ -191,11 +192,11 @@ const AdditServiesComponent = () => {
     };
     if (statusPayment == "Оплачено") {
       await axios
-        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices)
+        .put(`${API_URL}/orders/${orders}`, bodyPrices)
         .then((res) => res);
     } else {
       await axios
-        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices2)
+        .put(`${API_URL}/orders/${orders}`, bodyPrices2)
         .then((res) => res);
     }
     await dispatch(
@@ -231,11 +232,11 @@ const AdditServiesComponent = () => {
     };
     if (statusPayment == "Оплачено") {
       await axios
-        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices)
+        .put(`${API_URL}/orders/${orders}`, bodyPrices)
         .then((res) => res);
     } else {
       await axios
-        .put(`https://api.hotelshoshmodern.uz/orders/${orders}`, bodyPrices2)
+        .put(`${API_URL}/orders/${orders}`, bodyPrices2)
         .then((res) => res);
     }
     await dispatch(

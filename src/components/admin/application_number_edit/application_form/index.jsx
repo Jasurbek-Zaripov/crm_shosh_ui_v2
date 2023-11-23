@@ -17,6 +17,7 @@ import { OldOrdersPost } from "../../../../redux/old_orders";
 import { OrdersPost } from "../../../../redux/orders";
 import { RoomsEmpytGet, RoomsGet } from "../../../../redux/rooms";
 import { UsersPost } from "../../../../redux/users";
+import { API_URL } from "../../../../utils/api";
 import "./app.css";
 import styles from "./style.module.css";
 function ApplictionForm({ id }) {
@@ -265,22 +266,16 @@ function ApplictionForm({ id }) {
     // eski roomni bo`shatib qo`yish
     await axios
       .put(
-        `https://api.hotelshoshmodern.uz/rooms/${
-          OrdersFilter.map((elem) => elem.rooms.id)[0]
-        }`,
+        `${API_URL}/rooms/${OrdersFilter.map((elem) => elem.rooms.id)[0]}`,
         body2
       )
       .then((res) => res);
     // eski orderni empty qilish va ketish vaqtini qisqartirish
-    await axios
-      .put(`https://api.hotelshoshmodern.uz/orders/${id}`, bodyPut)
-      .then((res) => res);
+    await axios.put(`${API_URL}/orders/${id}`, bodyPut).then((res) => res);
 
     await HandleOrders();
     // yangi xona band qilish
-    await axios
-      .put(`https://api.hotelshoshmodern.uz/rooms/${rooms}`, body)
-      .then((res) => res);
+    await axios.put(`${API_URL}/rooms/${rooms}`, body).then((res) => res);
 
     await HandleUsers();
     await HandleOldOrders();

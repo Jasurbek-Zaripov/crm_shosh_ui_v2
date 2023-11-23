@@ -167,29 +167,30 @@ function initOrders(orders, object, handleClick) {
           onClick={() => handleClick(order.id)}
           id={order.id}
           key={"" + order.rooms.id + order.id}
-          title={`имя админ : ${order.staff.staff_name} ${
-            order.staff.staff_surname
-          } 
-          \nВремя бронирования: ${dayjs(order.createdAt).format(
+          title={`
+          [info]
+          имя админ : ${order.staff.staff_name} ${order.staff.staff_surname} 
+          Время бронирования: ${dayjs(order.createdAt).format(
             "DD.MM.YYYY HH:mm"
           )}  
-          \nкомпания : ${order.company}  
-          \nИмя: ${order.users[0]?.name} ${order.users[0]?.surname} 
-          \nколичество гостей : ${order.count_users} 
-          \nТип номера: ${order.rooms.type}   
-          \nНомер телефона: ${order.users[0]?.phone} 
-          \nБронировоние: ${order.booking} 
-          \nКоментарий: ${order.comentary}  
-          \nДата заезда : ${dayjs(order.arrival_date).format("DD.MM.YYYY")} 
-          \nВремя заезда: ${dayjs(order.arrival_date).format("HH:mm")} 
-          \nДата выезда: ${dayjs(order.departure_date).format("DD.MM.YYYY")} 
-          \nВремя выезда: ${dayjs(order.departure_date).format("HH:mm")} `}
+          компания : ${order.company}  
+          Имя: ${order.users[0]?.name} ${order.users[0]?.surname} 
+          количество гостей : ${order.count_users} 
+          Тип номера: ${order.rooms.type}   
+          Номер телефона: ${order.users[0]?.phone} 
+          Бронировоние: ${order.booking} 
+          Коментарий: ${order.comentary}  
+          Дата заезда : ${dayjs(order.arrival_date).format("DD.MM.YYYY")} 
+          Время заезда: ${dayjs(order.arrival_date).format("HH:mm")} 
+          Дата выезда: ${dayjs(order.departure_date).format("DD.MM.YYYY")} 
+          Время выезда: ${dayjs(order.departure_date).format("HH:mm")} `}
           startdate={new Date(order.arrival_date).toISOString()}
           enddate={new Date(order.departure_date).toISOString()}
           style={{
-            backgroundColor: getRandomColor(),
-            color: "white",
-            margin: "0.2rem 0",
+            backgroundColor:
+              order.status !== "empty" ? getRandomColor() : "#ddd",
+            color: order.status !== "empty" ? "white" : "grey",
+            margin: "0.2rem -10%",
             borderRadius: "10px",
             padding: "0.4rem",
             display: "flex",

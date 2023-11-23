@@ -42,9 +42,7 @@ export default function FormToInstantBooking() {
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const roomOptions = EmptyRooms.filter(
-    (room) =>
-      room.filial?.filial_name === user.filial.filial_name &&
-      room.status != "busy"
+    (room) => room.filial?.filial_name === user.filial.filial_name
   ).map((room) => ({
     label: (
       <Space>

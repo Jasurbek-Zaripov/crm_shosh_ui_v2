@@ -1,19 +1,11 @@
-import { Tabs } from "antd";
-import React, { useEffect, useRef , useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import ReactToPrint from "react-to-print";
 import Button from "../../../../common/button";
 import ModalCommon from "../../../../common/modal";
-import TableCommon from "../../../../common/table";
 import { OrdersGet } from "../../../../redux/orders";
-import BookingTab from "../room-tab/booking";
-import LaundryTab from "../room-tab/laundry";
-import MiniBarTab from "../room-tab/minibar";
-import OtherServiesTab from "../room-tab/other_servies";
-import ShtrafTab from "../room-tab/shtraf";
-import RoomTable from "../room-table/roomTable";
 import styles from "./style.module.css";
 const ModalPrint = ({ HandleRoomClose, HandleClose3, open3 }) => {
   const component = useRef();
@@ -36,7 +28,9 @@ const ModalPrint = ({ HandleRoomClose, HandleClose3, open3 }) => {
   function EnumComingRasxod2() {
     let sum = 0;
     // dataSmenaFind2.map((elem) =>  sum += Number(elem.cash_flow));
-    dataFind.map(elem => elem.services_orders.map(services => sum +=  Number(services.price)))
+    dataFind.map((elem) =>
+      elem.services_orders.map((services) => (sum += Number(services.price)))
+    );
     return sum;
   }
 
@@ -120,7 +114,7 @@ const ModalPrint = ({ HandleRoomClose, HandleClose3, open3 }) => {
   };
   const OldNumber = useRef();
   const OldNumber2 = useRef();
-  console.log(dataFind.map(elem => elem.old)[0]?.length > 0  ? (Number(dataFind.map(elem => elem.old.map(old => Number(old.total_payable - old.booking)))) + Number(EnumComingRasxod2())).toLocaleString() : EnumComingRasxod2().toLocaleString());
+
   return (
     <>
       <ModalCommon width={1000} open={open3} onCancel={HandleClose3}>
@@ -132,7 +126,15 @@ const ModalPrint = ({ HandleRoomClose, HandleClose3, open3 }) => {
             />
             <div className={styles.content_box}>
               <h2>{t("ModalPrint.0")}</h2>
-              <p style={{whiteSpace : "pre-wrap" , textDecoration : "none", width : "5 0%"}}>{t("ModalPrint.16")}</p>
+              <p
+                style={{
+                  whiteSpace: "pre-wrap",
+                  textDecoration: "none",
+                  width: "5 0%",
+                }}
+              >
+                {t("ModalPrint.16")}
+              </p>
             </div>
           </div>
 
@@ -152,7 +154,6 @@ const ModalPrint = ({ HandleRoomClose, HandleClose3, open3 }) => {
                   </span>
                 </h2>
                 <div className={styles.kvitansiya_table}>
-
                   <table>
                     <tr>
                       <th className={styles.th}>{t("ModalPrint.2")}</th>
@@ -172,47 +173,90 @@ const ModalPrint = ({ HandleRoomClose, HandleClose3, open3 }) => {
                             {elem.departure_date.slice(0, 10)}
                           </td>
                           <td className={styles.td}>{elem.number_night}</td>
-                          <td className={styles.td}>{elem.rooms.rooms} {elem.rooms.type}</td>
-                          <td className={styles.td}>{Number(elem.definition).toLocaleString()}</td>
-                          <td className={styles.td} ref={OldNumber2} id={Number(elem.number_night) * Number(elem.definition)}>{(Number(elem.number_night) * Number(elem.definition)).toLocaleString()}</td>
+                          <td className={styles.td}>
+                            {elem.rooms.rooms} {elem.rooms.type}
+                          </td>
+                          <td className={styles.td}>
+                            {Number(elem.definition).toLocaleString()}
+                          </td>
+                          <td
+                            className={styles.td}
+                            ref={OldNumber2}
+                            id={
+                              Number(elem.number_night) *
+                              Number(elem.definition)
+                            }
+                          >
+                            {(
+                              Number(elem.number_night) *
+                              Number(elem.definition)
+                            ).toLocaleString()}
+                          </td>
                         </>
                       ))}
                     </tr>
                   </table>
-                  {dataFind.map(elem => elem.old.length > 0 ? <h4 className={styles.print_heading}>{t("Finance.4")}</h4> : null)}
+                  {dataFind.map((elem) =>
+                    elem.old.length > 0 ? (
+                      <h4 className={styles.print_heading}>{t("Finance.4")}</h4>
+                    ) : null
+                  )}
 
                   <table>
-                  { dataFind.map(elem => elem.old.length > 0 ?
-                    <tr>
-                      <th className={styles.th}>{t("ModalPrint.2")}</th>
-                      <th className={styles.th}>{t("ModalPrint.3")}</th>
-                      <th className={styles.th}>{t("Finance.table.19")}</th>
+                    {dataFind.map((elem) =>
+                      elem.old.length > 0 ? (
+                        <tr>
+                          <th className={styles.th}>{t("ModalPrint.2")}</th>
+                          <th className={styles.th}>{t("ModalPrint.3")}</th>
+                          <th className={styles.th}>{t("Finance.table.19")}</th>
 
-                      <th className={styles.th}>{t("ModalPrint.4")}</th>
-                      <th className={styles.th}>№</th>
-                      <th className={styles.th}>{t("ModalPrint.6")}</th>
-                      <th className={styles.th}>{t("ModalPrint.7")}</th>
-                      
-                    </tr>:null
-                      )}
+                          <th className={styles.th}>{t("ModalPrint.4")}</th>
+                          <th className={styles.th}>№</th>
+                          <th className={styles.th}>{t("ModalPrint.6")}</th>
+                          <th className={styles.th}>{t("ModalPrint.7")}</th>
+                        </tr>
+                      ) : null
+                    )}
                     <tr>
-                      { dataFind?.map((order) => order.old.length > 0 ? order.old.map((old) => 
-                        <>
-                          <td className={styles.td}>
-                            {old.arrival_date.slice(0, 10)}
-                          </td>
-                          <td className={styles.td}>
-                            {old.departure_date.slice(0, 10)}
-                          </td>
-                          <td className={styles.td}>
-                            {old.early_release.slice(0, 10)}
-                          </td>
-                          <td className={styles.td}>{old.number_night}</td>
-                          <td className={styles.td}>{old.rooms} {old.type}</td>
-                          <td className={styles.td}>{Number(old.definition).toLocaleString()}</td>
-                          <td className={styles.td} ref={OldNumber} id={Number(old.number_night) *  Number(old.definition)}>{(Number(old.number_night) *  Number(old.definition)).toLocaleString()}</td>
-                        </> 
-                      ):null)}
+                      {dataFind?.map((order) =>
+                        order.old.length > 0
+                          ? order.old.map((old) => (
+                              <>
+                                <td className={styles.td}>
+                                  {old.arrival_date.slice(0, 10)}
+                                </td>
+                                <td className={styles.td}>
+                                  {old.departure_date.slice(0, 10)}
+                                </td>
+                                <td className={styles.td}>
+                                  {old.early_release.slice(0, 10)}
+                                </td>
+                                <td className={styles.td}>
+                                  {old.number_night}
+                                </td>
+                                <td className={styles.td}>
+                                  {old.rooms} {old.type}
+                                </td>
+                                <td className={styles.td}>
+                                  {Number(old.definition).toLocaleString()}
+                                </td>
+                                <td
+                                  className={styles.td}
+                                  ref={OldNumber}
+                                  id={
+                                    Number(old.number_night) *
+                                    Number(old.definition)
+                                  }
+                                >
+                                  {(
+                                    Number(old.number_night) *
+                                    Number(old.definition)
+                                  ).toLocaleString()}
+                                </td>
+                              </>
+                            ))
+                          : null
+                      )}
                     </tr>
                   </table>
                   <table>
@@ -225,17 +269,55 @@ const ModalPrint = ({ HandleRoomClose, HandleClose3, open3 }) => {
                     <tr>
                       <td className={styles.td}>1</td>
                       <td className={styles.td}>{t("Room.38")}</td>
-                      <td className={styles.td}>{dataFind.map(elem => elem.old)[0]?.length > 0  ? ( Number((dataFind.map(elem => Number(elem.number_night) * Number(elem.definition)))) +  Number(dataFind.map(elem => elem.old.map(old => Number(old.number_night) *  Number(old.definition))))).toLocaleString() : (dataFind.map(elem => Number(elem.number_night)) * dataFind.map(elem => Number(elem.definition))).toLocaleString()}</td>
+                      <td className={styles.td}>
+                        {dataFind.map((elem) => elem.old)[0]?.length > 0
+                          ? (
+                              Number(
+                                dataFind.map(
+                                  (elem) =>
+                                    Number(elem.number_night) *
+                                    Number(elem.definition)
+                                )
+                              ) +
+                              Number(
+                                dataFind.map((elem) =>
+                                  elem.old.map(
+                                    (old) =>
+                                      Number(old.number_night) *
+                                      Number(old.definition)
+                                  )
+                                )
+                              )
+                            ).toLocaleString()
+                          : (
+                              dataFind.map((elem) =>
+                                Number(elem.number_night)
+                              ) *
+                              dataFind.map((elem) => Number(elem.definition))
+                            ).toLocaleString()}
+                      </td>
                     </tr>
                     <tr>
                       <td className={styles.td}>2</td>
                       <td className={styles.td}>{t("Room.39")}</td>
-                      <td className={styles.td}>{dataFind.map(elem => elem.old)[0]?.length > 0  ? (Number(dataFind.map(elem => elem.old.map(old => Number(old.total_payable - old.booking)))) + Number(EnumComingRasxod2())).toLocaleString() : EnumComingRasxod2().toLocaleString()}</td>
+                      <td className={styles.td}>
+                        {dataFind.map((elem) => elem.old)[0]?.length > 0
+                          ? (
+                              Number(
+                                dataFind.map((elem) =>
+                                  elem.old.map((old) =>
+                                    Number(old.total_payable - old.booking)
+                                  )
+                                )
+                              ) + Number(EnumComingRasxod2())
+                            ).toLocaleString()
+                          : EnumComingRasxod2().toLocaleString()}
+                      </td>
                     </tr>
                     <tr>
                       <td className={styles.td}></td>
                       <td
-                        style={{ 
+                        style={{
                           textTransform: "uppercase",
                           fontWeight: "bold",
                         }}
@@ -244,7 +326,42 @@ const ModalPrint = ({ HandleRoomClose, HandleClose3, open3 }) => {
                         {t("ModalPrint.9")}
                       </td>
                       <td style={{ fontWeight: "bold" }} className={styles.td}>
-                      {dataFind.map(elem => elem.old)[0]?.length > 0 ?  (( Number((dataFind.map(elem => Number(elem.number_night) * Number(elem.definition)))) +  Number(dataFind.map(elem => elem.old.map(old => Number(old.number_night) *  Number(old.definition))))) + Number(dataFind.map(elem => elem.old.map(old => Number(old.total_payable - old.booking)))) + EnumComingRasxod2()).toLocaleString():(dataFind.map(elem => Number(elem.number_night)) * dataFind.map(elem => Number(elem.definition)) + EnumComingRasxod2()).toLocaleString()}
+                        {dataFind.map((elem) => elem.old)[0]?.length > 0
+                          ? (
+                              Number(
+                                dataFind.map(
+                                  (elem) =>
+                                    Number(elem.number_night) *
+                                    Number(elem.definition)
+                                )
+                              ) +
+                              Number(
+                                dataFind.map((elem) =>
+                                  elem.old.map(
+                                    (old) =>
+                                      Number(old.number_night) *
+                                      Number(old.definition)
+                                  )
+                                )
+                              ) +
+                              Number(
+                                dataFind.map((elem) =>
+                                  elem.old.map((old) =>
+                                    Number(old.total_payable - old.booking)
+                                  )
+                                )
+                              ) +
+                              EnumComingRasxod2()
+                            ).toLocaleString()
+                          : (
+                              dataFind.map((elem) =>
+                                Number(elem.number_night)
+                              ) *
+                                dataFind.map((elem) =>
+                                  Number(elem.definition)
+                                ) +
+                              EnumComingRasxod2()
+                            ).toLocaleString()}
                       </td>
                     </tr>
                   </table>
@@ -284,12 +401,9 @@ const ModalPrint = ({ HandleRoomClose, HandleClose3, open3 }) => {
                   <h2>{t("ModalPrint.13")}</h2>
                   <div className={styles.print_footer_wrapp}>
                     <div className={styles.print_footer_item}>
-                      <span style={{whiteSpace: "pre-wrap",width:"960px"}}>
-                      {dataFind.map(
-                      (elem) => elem.company_details
-                    )}
+                      <span style={{ whiteSpace: "pre-wrap", width: "960px" }}>
+                        {dataFind.map((elem) => elem.company_details)}
                       </span>
-
                     </div>
                   </div>
                 </div>
@@ -306,8 +420,8 @@ const ModalPrint = ({ HandleRoomClose, HandleClose3, open3 }) => {
                 fontWeight: "400",
                 fontFamily: "Rubik",
                 padding: "11px 16px",
-                display :"flex",
-                marginLeft: "auto"
+                display: "flex",
+                marginLeft: "auto",
               }}
             >
               {t("Room.23")}

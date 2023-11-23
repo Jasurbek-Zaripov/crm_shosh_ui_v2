@@ -71,7 +71,7 @@ function ChessComponent() {
   const OrdersGetFilterDepartureMonth = OrderGet.filter(
     (e) => e.arrival_date.slice(0, 7) == DateFormat2(TodayDate)
   );
-  console.log();
+
   function OrdersGetMonthNight() {
     let sum = 0;
     OrdersGetFilterDepartureMonth.map((elem) =>
