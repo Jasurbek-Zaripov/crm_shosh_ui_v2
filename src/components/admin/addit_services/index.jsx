@@ -13,18 +13,14 @@ import { ServicesOrdersPost } from "../../../redux/servies_orders";
 import { API_URL } from "../../../utils/api";
 import styles from "./style.module.css";
 
-const AdditServiesComponent = () => {
+const AdditServiesComponent = ({ order: propOrderId }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const OrderGet = useSelector((state) => state.Order.OrdersBusyGet.data);
   const ProductGet = useSelector((state) => state.Products.ProductsGet.data);
   useEffect(() => {
     dispatch(OrdersBusyGet());
-  }, []);
-  useEffect(() => {
     dispatch(ProductsGet());
-  }, []);
-  useEffect(() => {
     dispatch(OrdersGet());
   }, []);
   const [orders, setOrders] = useState(null);
@@ -316,6 +312,12 @@ const AdditServiesComponent = () => {
         })
       : null
   );
+
+  useEffect(() => {
+    if (propOrderId) {
+      setOrders(propOrderId);
+    }
+  }, [propOrderId]);
 
   return (
     <>
