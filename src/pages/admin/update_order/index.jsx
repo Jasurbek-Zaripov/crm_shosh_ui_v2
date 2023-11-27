@@ -99,6 +99,11 @@ export default function UpdateOrder() {
     val.arrival_date = dayjs(val.date[0]).format(dateFormat);
     val.departure_date = dayjs(val.date[1]).format(dateFormat);
     val.date = undefined;
+    val.definition = order.rooms.definition;
+    val.sale = 0;
+    val.booking = val.total_payable;
+    val.paid = val.status_payment === "Долговое" ? 0 : val.total_payable;
+    val.debt = val.status_payment === "Оплачено" ? 0 : val.total_payable;
     setLoadingForm(true);
     OrderUpdateById(paramOrderId, val)
       .then(() => successMsg())
